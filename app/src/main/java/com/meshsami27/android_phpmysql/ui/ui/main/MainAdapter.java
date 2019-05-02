@@ -15,7 +15,7 @@ import com.meshsami27.android_phpmysql.ui.model.Note;
 
 import java.util.List;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAdapter{
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAdapter>{
 
     private Context context;
     private List<Note> notes;
@@ -79,5 +79,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
 
     public interface ItemClickListener{
         void onItemOnClick(View view, int position);
+
+        void onItemOnClick(MainActivity mainActivity);
     }
 }
