@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.meshsami27.android_phpmysql.R;
@@ -16,7 +17,7 @@ import com.meshsami27.android_phpmysql.ui.ui.Insert.InsertActivity;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainView,View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements MainView {
 
     FloatingActionButton floatingActionButton;
     RecyclerView recyclerView;
@@ -24,9 +25,13 @@ public class MainActivity extends AppCompatActivity implements MainView,View.OnC
 
     MainPresenter presenter;
     MainAdapter adapter;
-    MainAdapter.ItemClickListener itemClickListener;
+
+    private View.OnClickListener onItemClickListener;
+
 
     List<Note> note;
+    private int position;
+    private View.OnClickListener clickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +43,16 @@ public class MainActivity extends AppCompatActivity implements MainView,View.OnC
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         floatingActionButton = findViewById(R.id.add);
-        floatingActionButton.setOnClickListener(this);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.add:
+                        Intent intent = new Intent(getApplicationContext(), InsertActivity.class);
+                        startActivity(intent);
+                }
+            }
+        });
 
         presenter = new MainPresenter(this);
         presenter.getData();
@@ -50,17 +64,14 @@ public class MainActivity extends AppCompatActivity implements MainView,View.OnC
             }
         });
 
-        itemClickListener.onItemOnClick(this);
-        int position = 0;
-        String title = note.get(position).getTitle();
-        Toast.makeText(this, title, Toast.LENGTH_SHORT).show();
-    }
-    @Override
-    public void onClick(View view){
-        switch (view.getId()) {
-            case R.id.add:
-                startActivity(new Intent(this, InsertActivity.class));
-        }
+
+//        View.OnClickListener clickListener;
+//        clickListener = null;
+//        {
+//            onItemClickListener = clickListener;
+//            String title = note.get(position).getTitle();
+//            Toast.makeText(this, title, Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override
@@ -75,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MainView,View.OnC
 
     @Override
     public void onGetResult(List<Note> notes) {
-        adapter = new MainAdapter(this, notes, itemClickListener);
+        adapter = new MainAdapter(this, notes, (MainAdapter.ItemClickListener) clickListener);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 

@@ -14,6 +14,8 @@ import com.meshsami27.android_phpmysql.R;
 import com.meshsami27.android_phpmysql.ui.api.ApiClient;
 import com.meshsami27.android_phpmysql.ui.api.ApiInterface;
 import com.meshsami27.android_phpmysql.ui.model.Note;
+import com.thebluealliance.spectrum.SpectrumDialog;
+import com.thebluealliance.spectrum.SpectrumPalette;
 
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,10 +24,13 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
 
     EditText et_title, et_note;
     ProgressDialog progressDialog;
+    SpectrumPalette palette;
 
     InsertPresenter presenter;
 
     ApiInterface apiInterface;
+
+    int color;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +39,23 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
 
         et_title = findViewById(R.id.title);
         et_note = findViewById(R.id.note);
+        palette = findViewById(R.id.palette);
+
+
+//        palette.setOnColorSelectedListener(new SpectrumPalette.OnColorSelectedListener() {
+//            @Override
+//            public void onColorSelected(int color) {
+//
+//            }
+//
+//            abstract class onColorSelectedListener {
+//                public abstract void onColorSelected(int selectedColor);
+//            }
+//        });
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait...");
+
 
         presenter = new InsertPresenter(this);
 

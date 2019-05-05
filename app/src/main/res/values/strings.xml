@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Android-PHPMySql</string>
     <string name="to_do">To do</string>
-    <string name="enter_note">Enter a note</string>
+    <string name="enter_note">Enter a note...</string>
     <string name="save">save</string>
     <!--<string name="date">date</string>-->
     <string name="title_activity_display_entries">DisplayEntriesActivity</string>

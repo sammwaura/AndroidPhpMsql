@@ -33,7 +33,16 @@
             android:minLines="6"
             android:gravity="top|start"
             android:layout_marginTop="20dp"
-            />
+            tools:ignore="Autofill" />
+
+        <com.thebluealliance.spectrum.SpectrumPalette
+            android:id="@+id/palette"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/note"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            app:spectrum_colors="@array/demo_colors" />
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
