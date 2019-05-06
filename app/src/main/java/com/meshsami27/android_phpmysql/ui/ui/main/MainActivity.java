@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.meshsami27.android_phpmysql.R;
@@ -25,13 +26,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     MainPresenter presenter;
     MainAdapter adapter;
-
-    private View.OnClickListener onItemClickListener;
-
-
+    AdapterView.OnItemClickListener itemClickListener;
     List<Note> note;
-    private int position;
-    private View.OnClickListener clickListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +61,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
             }
         });
 
-
-//        View.OnClickListener clickListener;
-//        clickListener = null;
-//        {
-//            onItemClickListener = clickListener;
-//            String title = note.get(position).getTitle();
-//            Toast.makeText(this, title, Toast.LENGTH_SHORT).show();
-//        }
+//        ListView lv = getListView();
+//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
+//                    String title = note.get(position).getTitle();
+//                   Toast.makeText(getApplicationContext(),
+//                        "title", Toast.LENGTH_SHORT);
+//            }
+//        });
     }
 
     @Override
@@ -86,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void onGetResult(List<Note> notes) {
-        adapter = new MainAdapter(this, notes, (MainAdapter.ItemClickListener) clickListener);
+        adapter = new MainAdapter(this, notes, (MainAdapter.ItemClickListener) itemClickListener );
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
@@ -97,6 +95,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void onErrorLoading(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 
+    }
+
+    public ListView getListView() {
+        return (ListView) note;
     }
 }
 
