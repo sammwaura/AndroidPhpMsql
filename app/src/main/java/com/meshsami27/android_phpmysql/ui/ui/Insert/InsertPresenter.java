@@ -17,9 +17,11 @@ public class InsertPresenter {
     public InsertPresenter(InsertView view){
         this.view = view;
     }
-     void saveNote(final String title, final String note, final int color) {
+    void saveNote(final String title, final String note, final int color) {
 
-        view.showProgress();
+
+
+        /*view.showProgress();
 
         ApiInterface  apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         retrofit2.Call<Note> call = apiInterface.saveNote(title,note,color);
@@ -46,7 +48,8 @@ public class InsertPresenter {
                 view.hideProgress();
                 view.onAddError(t.getLocalizedMessage());
             }
-        });
+        });*/
 
     }
 }
+

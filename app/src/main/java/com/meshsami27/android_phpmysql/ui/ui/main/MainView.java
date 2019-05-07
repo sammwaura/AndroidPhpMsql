@@ -7,6 +7,6 @@ import java.util.List;
 public interface MainView {
     void showLoading();
     void hideLoading();
-    void onGetResult(List<Note> notes);
+    void onGetResult(List<Note> noter);
     void onErrorLoading(String message);
 }

@@ -61,15 +61,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
             }
         });
 
-//        ListView lv = getListView();
-//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
-//                    String title = note.get(position).getTitle();
-//                   Toast.makeText(getApplicationContext(),
-//                        "title", Toast.LENGTH_SHORT);
-//            }
-//        });
     }
 
     @Override
@@ -83,12 +74,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void onGetResult(List<Note> notes) {
-        adapter = new MainAdapter(this, notes, (MainAdapter.ItemClickListener) itemClickListener );
+    public void onGetResult(List<Note> noter) {
+        adapter = new MainAdapter(this, noter, (MainAdapter.ItemClickListener) itemClickListener );
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
-        note = notes;
+        note = noter;
     }
 
     @Override

@@ -4,25 +4,23 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Note {
-
     @Expose
     @SerializedName("id") private int id;
     @Expose
-    @SerializedName("String") private String title;
+    @SerializedName("title") private String title;
     @Expose
     @SerializedName("note") private String note;
     @Expose
-    @SerializedName("color") private int color;
+    @SerializedName("color") private String color;
     @Expose
     @SerializedName("date") private String date;
     @Expose
     @SerializedName("success") private Boolean success;
     @Expose
     @SerializedName("message") private String message;
-//
-//    public Note(String date) {
-//        this.date = date;
-//    }
+
+    public Note(String notes_id, String title, String note, int color) {
+    }
 
     public int getId() {
         return id;
@@ -48,12 +46,20 @@ public class Note {
         this.note = note;
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public Boolean getSuccess() {
@@ -70,9 +76,5 @@ public class Note {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public String getDate() {
-        return date;
     }
 }

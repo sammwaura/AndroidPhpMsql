@@ -18,13 +18,13 @@ import java.util.List;
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAdapter>{
 
     private Context context;
-    private List<Note> notes;
+    private List<Note> noter;
     private ItemClickListener itemClickListener;
 
 
-    public MainAdapter(Context context, List<Note> notes, ItemClickListener itemClickListener) {
+    public MainAdapter(Context context, List<Note> noter, ItemClickListener itemClickListener) {
         this.context = context;
-        this.notes = notes;
+        this.noter = noter;
         this.itemClickListener = itemClickListener;
     }
 
@@ -38,16 +38,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter holder, int position) {
-        Note note = notes.get(position);
+        Note note = noter.get(position);
         holder.tv_title.setText(note.getTitle());
         holder.tv_note.setText(note.getNote());
         holder.tv_date.setText(note.getDate());
-        holder.card_item.setCardBackgroundColor(note.getColor());
+//        holder.card_item.setCardBackgroundColor(note.getColor());
     }
 
     @Override
     public int getItemCount() {
-        return notes.size();
+        return noter.size();
     }
 
     class RecyclerViewAdapter extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -79,7 +79,5 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
 
     public interface ItemClickListener{
         void onItemOnClick(View view, int position);
-
-        void onItemOnClick(MainActivity mainActivity);
     }
 }
