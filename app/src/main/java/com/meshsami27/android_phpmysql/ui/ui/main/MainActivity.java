@@ -1,5 +1,7 @@
 package com.meshsami27.android_phpmysql.ui.ui.main;
 
+import android.app.LauncherActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,22 +14,36 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.meshsami27.android_phpmysql.R;
 import com.meshsami27.android_phpmysql.ui.model.Note;
 import com.meshsami27.android_phpmysql.ui.ui.Insert.InsertActivity;
 
-import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class MainActivity extends AppCompatActivity {
 
     FloatingActionButton floatingActionButton;
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefresh;
-
-    MainPresenter presenter;
-    MainAdapter adapter;
+    
+    RecyclerView.Adapter adapter;
     AdapterView.OnItemClickListener itemClickListener;
-    List<Note> note;
+    ArrayList<Note> noter;
 
 
     @Override
@@ -35,9 +51,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        swipeRefresh = findViewById(R.id.swipe_refresh);
+//        swipeRefresh = findViewById(R.id.swipe_refresh);
         recyclerView = findViewById(R.id.recyclerview);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        retrieveData();
 
         floatingActionButton = findViewById(R.id.add);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -51,45 +70,107 @@ public class MainActivity extends AppCompatActivity implements MainView {
             }
         });
 
-        presenter = new MainPresenter(this);
-        presenter.getData();
+//        presenter = new MainPresenter(this);
+//        presenter.getData();
 
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                presenter.getData();
+//            }
+//        });
+        noter = new ArrayList<>();
+
+    }
+
+    private void retrieveData() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Retrieving data....");
+        progressDialog.show();
+
+
+        System.out.println("sssssssssssssssssssssss");
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                "http://my-noter.000webhostapp.com/notes.php",
+                new Response.Listener <String>() {
+
             @Override
-            public void onRefresh() {
-                presenter.getData();
+            public void onResponse(String s) {
+                progressDialog.dismiss();
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(s);
+                        JSONArray array = jsonObject.getJSONArray("notes");
+
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject row = array.getJSONObject(i);
+                                Note note = new Note(
+                                    row.getString("note_id"),
+                                    row.getString("title"),
+                                    row.getString("note"),
+                                    row.getInt("color")
+                                );
+                                noter.add(note);
+
+                            }
+                            adapter = new MainAdapter(getApplicationContext(), noter);
+                            adapter.notifyDataSetChanged();
+                            recyclerView.setAdapter(adapter);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("volleyError error" + error.getMessage());
+                        Toast.makeText(getApplicationContext(), "Poor network connection.", Toast.LENGTH_LONG).show();
+                    }
+
+
+                }) {
+            @Override
+            protected Map <String, String> getParams() throws AuthFailureError {
+                System.out.println();
+                return super.getParams();
             }
-        });
+        };
 
+        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        requestQueue.add(stringRequest);
     }
 
-    @Override
-    public void showLoading() {
-        swipeRefresh.setRefreshing(true);
-    }
+//    @Override
+//    public void showLoading() {
+//        swipeRefresh.setRefreshing(true);
+//    }
+//
+//    @Override
+//    public void hideLoading() {
+//        swipeRefresh.setRefreshing(false);
+//    }
+//
+//    @Override
+//    public void onGetResult(List<Note> noter) {
+//      //  adapter = new MainAdapter(this, noter, (MainAdapter.ItemClickListener) itemClickListener );
+//        adapter.notifyDataSetChanged();
+//        recyclerView.setAdapter(adapter);
+//
+//        note = noter;
+//    }
+//
+//    @Override
+//    public void onErrorLoading(String message) {
+//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+//        System.out.println("SDFSDFSDFSF"+message);
+//
+//    }
 
-    @Override
-    public void hideLoading() {
-        swipeRefresh.setRefreshing(false);
-    }
-
-    @Override
-    public void onGetResult(List<Note> noter) {
-        adapter = new MainAdapter(this, noter, (MainAdapter.ItemClickListener) itemClickListener );
-        adapter.notifyDataSetChanged();
-        recyclerView.setAdapter(adapter);
-
-        note = noter;
-    }
-
-    @Override
-    public void onErrorLoading(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-
-    }
-
-    public ListView getListView() {
-        return (ListView) note;
-    }
+//    public ListView getListView() {
+//        return (ListView) note;
+//    }
 }
 

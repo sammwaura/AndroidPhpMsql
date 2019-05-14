@@ -2,6 +2,7 @@ package com.meshsami27.android_phpmysql.ui.ui.Insert;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,13 +22,17 @@ import com.android.volley.toolbox.Volley;
 import com.meshsami27.android_phpmysql.R;
 import com.meshsami27.android_phpmysql.ui.api.ApiInterface;
 import com.meshsami27.android_phpmysql.ui.model.Note;
+import com.meshsami27.android_phpmysql.ui.ui.main.MainActivity;
 import com.thebluealliance.spectrum.SpectrumPalette;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,7 +51,7 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
     private int mDialogColor;
     private boolean mCloseOnSelected;
     private Context context;
-    private VolleyResponseListener listener;
+    private List<Note> notes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,76 +103,46 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
                 } else if (note.isEmpty()) {
                     et_note.setError("Please enter a note");
                 } else {
-                    //presenter.saveNote(title, note, color);
 
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, "", new Response.Listener <String>() {
-                        public Set <Note> noter;
 
+                    StringRequest stringRequest=new StringRequest(Request.Method.POST, "http://my-noter.000webhostapp.com/save.php", new Response.Listener<String>() {
                         @Override
-                        public void onResponse(String s) {
-                            System.out.println("sssssssssssssssssssssss" + s);
-                            if (s != null) {
-                                JSONArray array = null;
-                                try {
-                                    JSONObject jsonObject = new JSONObject(s);
+                        public void onResponse(String response) {
+                            Toast.makeText(getApplicationContext(), "Successfully Saved.", Toast.LENGTH_LONG).show();
 
-                                    JSONArray posts = jsonObject.getJSONArray("notes");
-                                    noter.clear();
-                                    if (posts.length() > 0) {
-                                        for (int i = 0; i < posts.length(); i++) {
-                                            JSONObject row = posts.getJSONObject(i);
-
-                                            String note_id = row.getString("note_id");
-                                            String title = row.getString("title");
-                                            String note = row.getString("note");
-                                            int color = row.getInt("color");
-                                            noter.add(new Note(note_id, title, note, color));
-                                        }
-
-                                        initializeData();
-
-                                        findViewById(R.id.title).setVisibility(View.VISIBLE);
-                                        findViewById(R.id.note).setVisibility(View.VISIBLE);
-                                        findViewById(R.id.palette).setVisibility(View.VISIBLE);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                            System.out.println("MAIN response " + s);
-                        }
-
-                        private void initializeData() {
-                           noter.add(new Note("notes_id", "title", "note", "color"));
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
 
                         }
-                    },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    System.out.println("volleyError error" + error.getMessage());
-                                    Toast.makeText(getApplicationContext(), "Poor network connection.", Toast.LENGTH_LONG).show();
-                                }
-
-
-                            }) {
+                    }, new Response.ErrorListener() {
                         @Override
-                        protected Map <String, String> getParams() throws AuthFailureError {
-                            Map <String, String> params = new Hashtable <>();
-                            params.put("title", title.toString());
-                            params.put("note", note.toString());
-                            params.put("color", color(toString().));
-                            System.out.println();
-                            return super.getParams();
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    }){
+                        @Override
+                        protected Map<String, String> getParams()  {
+                            Map<String,String>params=new HashMap<String, String>();
+                            params.put("title", title);
+                            params.put("note", note);
+                            params.put("color", String.valueOf(color));
+                            System.out.println("&^&&&&&&&"+title);
+                            System.out.println("###############"+note);
+                            return params;
                         }
                     };
-
-                    RequestQueue requestQueue = Volley.newRequestQueue(InsertActivity.this);
+                    RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
                     requestQueue.add(stringRequest);
-
                 }
+
         }
+
+        return false;
+    }
+
+    private void initializeData(String notes_id, String title, String note, int color) {
+        notes = new ArrayList<>();
+        notes.add(new Note(notes_id,title,note,color));
 
     }
 

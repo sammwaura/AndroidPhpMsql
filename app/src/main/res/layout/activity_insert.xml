@@ -45,4 +45,5 @@
             app:spectrum_colors="@array/demo_colors" />
 
     </RelativeLayout>
+
 </android.support.v4.widget.NestedScrollView>
