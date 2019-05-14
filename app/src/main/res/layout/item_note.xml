@@ -30,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/to_do"
-            android:hint="@string/to_do"
             android:textColor="@android:color/black"
             android:textSize="18sp"/>
 

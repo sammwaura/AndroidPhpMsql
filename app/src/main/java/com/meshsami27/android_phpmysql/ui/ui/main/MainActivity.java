@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefresh;
-    
+
     RecyclerView.Adapter adapter;
     AdapterView.OnItemClickListener itemClickListener;
-    ArrayList<Note> noter;
+    ArrayList <Note> noter;
 
 
     @Override
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        noter = new ArrayList <>();
         retrieveData();
 
         floatingActionButton = findViewById(R.id.add);
@@ -69,18 +71,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-//        presenter = new MainPresenter(this);
-//        presenter.getData();
-
-//        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                presenter.getData();
-//            }
-//        });
-        noter = new ArrayList<>();
-
     }
 
     private void retrieveData() {
@@ -94,35 +84,36 @@ public class MainActivity extends AppCompatActivity {
                 "http://my-noter.000webhostapp.com/notes.php",
                 new Response.Listener <String>() {
 
-            @Override
-            public void onResponse(String s) {
-                progressDialog.dismiss();
+                    @Override
+                    public void onResponse(String s) {
+                        progressDialog.dismiss();
 
-                    try {
-                        JSONObject jsonObject = new JSONObject(s);
-                        JSONArray array = jsonObject.getJSONArray("notes");
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            JSONArray array = jsonObject.getJSONArray("notes");
 
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject row = array.getJSONObject(i);
                                 Note note = new Note(
-                                    row.getString("note_id"),
-                                    row.getString("title"),
-                                    row.getString("note"),
-                                    row.getInt("color")
+                                        row.getString("note_id"),
+                                        row.getString("title"),
+                                        row.getString("note"),
+                                        row.getInt("color")
                                 );
                                 noter.add(note);
 
                             }
+
                             adapter = new MainAdapter(getApplicationContext(), noter);
                             adapter.notifyDataSetChanged();
                             recyclerView.setAdapter(adapter);
 
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-        },
+                },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -132,45 +123,18 @@ public class MainActivity extends AppCompatActivity {
 
 
                 }) {
+
             @Override
             protected Map <String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new Hashtable <>();
+                params.put("notes", Objects.requireNonNull(noter.toString()));
                 System.out.println();
-                return super.getParams();
+                return params;
             }
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
         requestQueue.add(stringRequest);
     }
-
-//    @Override
-//    public void showLoading() {
-//        swipeRefresh.setRefreshing(true);
-//    }
-//
-//    @Override
-//    public void hideLoading() {
-//        swipeRefresh.setRefreshing(false);
-//    }
-//
-//    @Override
-//    public void onGetResult(List<Note> noter) {
-//      //  adapter = new MainAdapter(this, noter, (MainAdapter.ItemClickListener) itemClickListener );
-//        adapter.notifyDataSetChanged();
-//        recyclerView.setAdapter(adapter);
-//
-//        note = noter;
-//    }
-//
-//    @Override
-//    public void onErrorLoading(String message) {
-//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-//        System.out.println("SDFSDFSDFSF"+message);
-//
-//    }
-
-//    public ListView getListView() {
-//        return (ListView) note;
-//    }
 }
 

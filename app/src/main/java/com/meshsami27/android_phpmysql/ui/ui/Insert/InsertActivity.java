@@ -42,14 +42,6 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
     ProgressDialog progressDialog;
     SpectrumPalette palette;
 
-    InsertPresenter presenter;
-
-    ApiInterface apiInterface;
-
-    private int mColor;
-    private int mCurrentValue;
-    private int mDialogColor;
-    private boolean mCloseOnSelected;
     private Context context;
     private List<Note> notes;
 
@@ -67,17 +59,9 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
 
             @Override
             public void onColorSelected(int color) {
-                mDialogColor = color;
-                if (mCloseOnSelected) {
-                    palette.setSelectedColor(color);
-                }
+                this.onColorSelected(palette.getSolidColor());
             }
         });
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait...");
-
-
-        presenter = new InsertPresenter(this);
     }
 
     @Override
@@ -96,14 +80,13 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
 
                 final String title = et_title.getText().toString().trim();
                 final String note = et_note.getText().toString().trim();
-                final int color = -2184710;
+                final int color = palette.getSolidColor();
 
                 if (title.isEmpty()) {
                     et_title.setError("Please enter a title");
                 } else if (note.isEmpty()) {
                     et_note.setError("Please enter a note");
                 } else {
-
 
                     StringRequest stringRequest=new StringRequest(Request.Method.POST, "http://my-noter.000webhostapp.com/save.php", new Response.Listener<String>() {
                         @Override
@@ -122,12 +105,13 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
                     }){
                         @Override
                         protected Map<String, String> getParams()  {
-                            Map<String,String>params=new HashMap<String, String>();
+                            Map<String,String>params=new HashMap<>();
                             params.put("title", title);
                             params.put("note", note);
                             params.put("color", String.valueOf(color));
                             System.out.println("&^&&&&&&&"+title);
                             System.out.println("###############"+note);
+                            System.out.println("&&&&&&&&&&&&"+color);
                             return params;
                         }
                     };
@@ -138,12 +122,6 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
         }
 
         return false;
-    }
-
-    private void initializeData(String notes_id, String title, String note, int color) {
-        notes = new ArrayList<>();
-        notes.add(new Note(notes_id,title,note,color));
-
     }
 
     @Override

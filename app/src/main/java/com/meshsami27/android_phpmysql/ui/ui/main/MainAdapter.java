@@ -23,12 +23,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
     private ArrayList<Note> noter;
     private ItemClickListener itemClickListener;
 
-    public class RecyclerViewAdapter extends RecyclerView.ViewHolder implements ItemClickListener{
-            public TextView tv_title, tv_note, tv_date;
-            public CardView card_item;
-            public ItemClickListener itemClickListener;
+     class RecyclerViewAdapter extends RecyclerView.ViewHolder implements ItemClickListener{
+             TextView tv_title, tv_note, tv_date;
+             CardView card_item;
+             ItemClickListener itemClickListener;
 
-        public RecyclerViewAdapter(View view, ItemClickListener itemClickListener) {
+            RecyclerViewAdapter(View view, ItemClickListener itemClickListener) {
             super(view);
             this.itemClickListener = itemClickListener;
 
@@ -69,10 +69,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter holder, int position) {
         Note note = noter.get(position);
-        holder.tv_title.setText(note.getTitle());
+        holder.tv_title.setText( noter.get(position).getTitle());
+
+        System.out.println("768786786876786876"+noter.get(position).getTitle());
+
+      //  holder.tv_title.setText(note.getTitle());
         holder.tv_note.setText(note.getNote());
-        holder.tv_date.setText(note.getDate());
-//        holder.card_item.setCardBackgroundColor(note.getColor(String.valueOf("color", color)));
+        //holder.tv_date.setText(note.getDate());
+       holder.card_item.setCardBackgroundColor(note.getColor());
     }
 
     @Override
