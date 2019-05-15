@@ -71,11 +71,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
         Note note = noter.get(position);
         holder.tv_title.setText( noter.get(position).getTitle());
 
+
         System.out.println("768786786876786876"+noter.get(position).getTitle());
 
       //  holder.tv_title.setText(note.getTitle());
         holder.tv_note.setText(note.getNote());
         //holder.tv_date.setText(note.getDate());
+
        holder.card_item.setCardBackgroundColor(note.getColor());
     }
 

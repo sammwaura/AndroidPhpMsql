@@ -3,6 +3,7 @@ package com.meshsami27.android_phpmysql.ui.ui.Insert;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -43,7 +44,10 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
     SpectrumPalette palette;
 
     private Context context;
+    private int color;
     private List<Note> notes;
+    private SpectrumPalette mSpectrumPalette;
+    private int selectedColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +58,37 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
         et_note = findViewById(R.id.note);
         palette = findViewById(R.id.palette);
 
+        mSpectrumPalette= findViewById(R.id.palette);
 
-        palette.setOnColorSelectedListener(new SpectrumPalette.OnColorSelectedListener() {
+        mSpectrumPalette.setHorizontalScrollBarEnabled(true);
+        mSpectrumPalette.setFixedColumnCount(17);
+
+
+        mSpectrumPalette.setSelectedColor(selectedColor);
+
+        mSpectrumPalette.setOnColorSelectedListener(new SpectrumPalette.OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(@ColorInt int color) {
+                selectedColor = color;
+                //color=-2234644;
+
+                //System.out.println("Color selected: #" + Integer.toHexString(color).toUpperCase());
+                //mDescriptionInput.setTextColor(color);
+            }
+        });
+
+        /*palette.setOnColorSelectedListener(new SpectrumPalette.OnColorSelectedListener() {
 
             @Override
             public void onColorSelected(int color) {
-                this.onColorSelected(palette.getSolidColor());
+                this.onColorSelected(color);
+                System.out.println("colorcolor"+color);
             }
+
         });
+
+        palette.setSelectedColor(getResources().getColor(R.color.white));
+        color = getResources().getColor(R.color.white);*/
     }
 
     @Override
@@ -80,7 +107,7 @@ public class InsertActivity extends AppCompatActivity implements InsertView {
 
                 final String title = et_title.getText().toString().trim();
                 final String note = et_note.getText().toString().trim();
-                final int color = palette.getSolidColor();
+                final int color = selectedColor;
 
                 if (title.isEmpty()) {
                     et_title.setError("Please enter a title");

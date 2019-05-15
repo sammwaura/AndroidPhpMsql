@@ -73,6 +73,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        // put your code here...
+        retrieveData();
+    }
+
     private void retrieveData() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Retrieving data....");
