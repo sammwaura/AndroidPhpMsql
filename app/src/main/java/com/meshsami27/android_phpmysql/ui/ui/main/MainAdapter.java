@@ -1,48 +1,61 @@
 package com.meshsami27.android_phpmysql.ui.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
+import android.nfc.Tag;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.meshsami27.android_phpmysql.R;
 import com.meshsami27.android_phpmysql.ui.model.Note;
+import com.meshsami27.android_phpmysql.ui.ui.Insert.InsertActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
+import static android.support.v4.app.ActivityCompat.startActivityForResult;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAdapter>{
 
     private Context context;
     private ArrayList<Note> noter;
     private ItemClickListener itemClickListener;
+    private int INTENT_EDIT = 200;
 
-     class RecyclerViewAdapter extends RecyclerView.ViewHolder implements ItemClickListener{
-             TextView tv_title, tv_note, tv_date;
-             CardView card_item;
-             ItemClickListener itemClickListener;
 
-            RecyclerViewAdapter(View view, ItemClickListener itemClickListener) {
+    class RecyclerViewAdapter extends RecyclerView.ViewHolder implements ItemClickListener{
+        TextView tv_title, tv_note, tv_date;
+         CardView card_item;
+         ItemClickListener itemClickListener;
+
+
+
+        RecyclerViewAdapter(View view, ItemClickListener itemClickListener) {
             super(view);
             this.itemClickListener = itemClickListener;
 
-            tv_title = (TextView) view.findViewById(R.id.title);
-            tv_note = (TextView) view.findViewById(R.id.note);
-            tv_date = (TextView) view.findViewById(R.id.date);
+            tv_title =view.findViewById(R.id.title);
+            tv_note = view.findViewById(R.id.note);
+            tv_date =  view.findViewById(R.id.date);
             card_item = view.findViewById(R.id.card_item);
 
-            card_item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onItemOnClick(view, getAdapterPosition());
-                }
-            });
 
         }
 
@@ -58,27 +71,44 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
         this.noter = noter;
     }
 
+
+
     @NonNull
 
     @Override
-    public RecyclerViewAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_note, parent, false);
+    public RecyclerViewAdapter onCreateViewHolder(@NonNull ViewGroup parent, final int viewType) {
+        final View view = LayoutInflater.from(context).inflate(R.layout.item_note, parent, false);
         return new RecyclerViewAdapter(view, itemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter holder, int position) {
-        Note note = noter.get(position);
+    public void onBindViewHolder(@NonNull final RecyclerViewAdapter holder, final int position) {
+        final Note note = noter.get(position);
         holder.tv_title.setText( noter.get(position).getTitle());
-
-
-        System.out.println("768786786876786876"+noter.get(position).getTitle());
 
       //  holder.tv_title.setText(note.getTitle());
         holder.tv_note.setText(note.getNote());
         //holder.tv_date.setText(note.getDate());
 
        holder.card_item.setCardBackgroundColor(note.getColor());
+
+       holder.card_item.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+             Intent intent = new Intent(context, InsertActivity.class);
+             intent.putExtra("title", noter.get(position).getTitle().toString());
+             intent.putExtra("note", noter.get(position).getNote().toString());
+             startActivityForResult(intent, INTENT_EDIT);
+           }
+
+           private void startActivityForResult(Intent intent, int intent_edit) {
+               Intent intent2 = new Intent(context, InsertActivity.class);
+               startActivityForResult(intent2, intent_edit);
+           }
+       });
+
+
+
     }
 
     @Override
@@ -90,5 +120,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
 
     public interface ItemClickListener{
         void onItemOnClick(View view, int position);
+
+
     }
 }

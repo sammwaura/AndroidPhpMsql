@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class Note {
 
-String notes_id; String title; String note; int color;
-    public Note(String notes_id, String title, String note, int color) {
+int notes_id; String title; String note; int color;
+    public Note(int notes_id, String title, String note, int color) {
         this.notes_id=notes_id;
         this.title=title;
         this.note=note;
@@ -38,4 +38,8 @@ String notes_id; String title; String note; int color;
         this.color = color;
     }
 
+    public int getId() {
+        return notes_id;
+    }
+    public void id(int id){ this.notes_id = id;}
 }

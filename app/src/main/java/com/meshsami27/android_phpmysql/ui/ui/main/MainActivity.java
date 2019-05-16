@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.Adapter adapter;
     AdapterView.OnItemClickListener itemClickListener;
     ArrayList <Note> noter;
+    private int INTENT_EDIT = 200;
+    private int INTENT_ADD = 100;
 
 
     @Override
@@ -57,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
+
         noter = new ArrayList <>();
         retrieveData();
 
@@ -67,14 +72,45 @@ public class MainActivity extends AppCompatActivity {
                 switch (v.getId()) {
                     case R.id.add:
                         Intent intent = new Intent(getApplicationContext(), InsertActivity.class);
-                        startActivity(intent);
+                        startActivityForResult(intent, INTENT_ADD);
                 }
             }
         });
+
+//        itemClickListener = new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
+//                int notes_id = noter.get(position).getId();
+//                String title = noter.get(position).getTitle();
+//                String note = noter.get(position).getNote();
+//                int color = noter.get(position).getColor();
+//
+//                Intent intent = new Intent(getApplicationContext(), InsertActivity.class);
+//                intent.putExtra("note_id", notes_id);
+//                intent.putExtra("title", title);
+//                intent.putExtra("note", note);
+//                intent.putExtra("note", color);
+//                startActivityForResult(intent, INTENT_EDIT);
+//            }
+//
+//        };
     }
 
     @Override
-    public void onResume(){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == INTENT_ADD && resultCode == RESULT_OK){
+            retrieveData();
+        }
+        else if (requestCode == INTENT_EDIT && resultCode == RESULT_OK){
+            retrieveData();
+        }
+    }
+
+    @Override
+    public void onResume() {
         super.onResume();
         // put your code here...
         retrieveData();
@@ -102,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject row = array.getJSONObject(i);
                                 Note note = new Note(
-                                        row.getString("note_id"),
+                                        row.getInt("note_id"),
                                         row.getString("title"),
                                         row.getString("note"),
                                         row.getInt("color")
@@ -133,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected Map <String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new Hashtable <>();
+                Map <String, String> params = new Hashtable <>();
                 params.put("notes", Objects.requireNonNull(noter.toString()));
                 System.out.println();
                 return params;
@@ -142,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
         requestQueue.add(stringRequest);
+
+
     }
 }
-
