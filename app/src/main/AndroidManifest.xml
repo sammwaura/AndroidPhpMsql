@@ -3,7 +3,7 @@
     package="com.meshsami27.android_phpmysql">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -15,17 +15,17 @@
         <activity android:name=".ui.ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                    <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.ui.Insert.InsertActivity"
-            android:theme="@style/InsertTheme"
-            android:launchMode="singleTask">
-
-
-        </activity>
+        <activity
+            android:name=".ui.ui.Insert.InsertActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/InsertTheme" />
+        <activity android:name=".ui.ui.main.UpdateActivity" />
+        <activity android:name=".ui.ui.Update.UpdateActivity"></activity>
     </application>
 
 </manifest>

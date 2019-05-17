@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -46,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.Adapter adapter;
     AdapterView.OnItemClickListener itemClickListener;
     ArrayList <Note> noter;
-    private int INTENT_EDIT = 200;
     private int INTENT_ADD = 100;
+
+
 
 
     @Override
@@ -55,11 +57,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        swipeRefresh = findViewById(R.id.swipe_refresh);
+//      swipeRefresh = findViewById(R.id.swipe_refresh);
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
 
         noter = new ArrayList <>();
@@ -76,44 +77,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-//        itemClickListener = new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
-//                int notes_id = noter.get(position).getId();
-//                String title = noter.get(position).getTitle();
-//                String note = noter.get(position).getNote();
-//                int color = noter.get(position).getColor();
-//
-//                Intent intent = new Intent(getApplicationContext(), InsertActivity.class);
-//                intent.putExtra("note_id", notes_id);
-//                intent.putExtra("title", title);
-//                intent.putExtra("note", note);
-//                intent.putExtra("note", color);
-//                startActivityForResult(intent, INTENT_EDIT);
-//            }
-//
-//        };
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == INTENT_ADD && resultCode == RESULT_OK){
-            retrieveData();
-        }
-        else if (requestCode == INTENT_EDIT && resultCode == RESULT_OK){
-            retrieveData();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // put your code here...
-        retrieveData();
     }
 
     private void retrieveData() {
@@ -181,4 +144,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // put your code here...
+        retrieveData();
+    }
+
 }

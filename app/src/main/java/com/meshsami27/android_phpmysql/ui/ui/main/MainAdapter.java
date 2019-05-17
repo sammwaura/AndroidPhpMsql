@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.meshsami27.android_phpmysql.R;
 import com.meshsami27.android_phpmysql.ui.model.Note;
 import com.meshsami27.android_phpmysql.ui.ui.Insert.InsertActivity;
+import com.meshsami27.android_phpmysql.ui.ui.Update.UpdateActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
     private int INTENT_EDIT = 200;
 
 
-    class RecyclerViewAdapter extends RecyclerView.ViewHolder implements ItemClickListener{
+    class RecyclerViewAdapter extends RecyclerView.ViewHolder implements  View.OnClickListener {
         TextView tv_title, tv_note, tv_date;
          CardView card_item;
          ItemClickListener itemClickListener;
@@ -49,22 +50,28 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
 
         RecyclerViewAdapter(View view, ItemClickListener itemClickListener) {
             super(view);
-            this.itemClickListener = itemClickListener;
+
 
             tv_title =view.findViewById(R.id.title);
             tv_note = view.findViewById(R.id.note);
             tv_date =  view.findViewById(R.id.date);
             card_item = view.findViewById(R.id.card_item);
 
+            this.itemClickListener = itemClickListener;
+//            card_item.setOnClickListener(this);
+
 
         }
-
+        /**
+         * Called when a view has been clicked.
+         *
+         * @param v The view that was clicked.
+         */
         @Override
-        public void onItemOnClick(View view, int position) {
-            onItemOnClick(view, getAdapterPosition());
+        public void onClick(View v) {
+            itemClickListener.onItemOnClick(v, getAdapterPosition());
         }
     }
-
 
     public MainAdapter(Context context, ArrayList<Note> noter) {
         this.context = context;
@@ -85,7 +92,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
     public void onBindViewHolder(@NonNull final RecyclerViewAdapter holder, final int position) {
         final Note note = noter.get(position);
         holder.tv_title.setText( noter.get(position).getTitle());
-
       //  holder.tv_title.setText(note.getTitle());
         holder.tv_note.setText(note.getNote());
         //holder.tv_date.setText(note.getDate());
@@ -95,19 +101,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
        holder.card_item.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-             Intent intent = new Intent(context, InsertActivity.class);
-             intent.putExtra("title", noter.get(position).getTitle().toString());
-             intent.putExtra("note", noter.get(position).getNote().toString());
-             startActivityForResult(intent, INTENT_EDIT);
-           }
-
-           private void startActivityForResult(Intent intent, int intent_edit) {
-               Intent intent2 = new Intent(context, InsertActivity.class);
-               startActivityForResult(intent2, intent_edit);
+               Intent intent = new Intent(context, UpdateActivity.class);
+               intent.putExtra("note_id", String.valueOf(noter.get(position).getId()));
+               intent.putExtra("title", noter.get(position).getTitle());
+               intent.putExtra("note", noter.get(position).getNote());
+               intent.putExtra("color", noter.get(position).getColor());
+                context.startActivity(intent);
            }
        });
-
-
 
     }
 
@@ -121,6 +122,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
     public interface ItemClickListener{
         void onItemOnClick(View view, int position);
 
-
+        View.OnClickListener onItemOnClick();
     }
 }
