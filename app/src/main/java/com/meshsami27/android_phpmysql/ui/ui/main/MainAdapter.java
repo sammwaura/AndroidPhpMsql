@@ -98,7 +98,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
 
        holder.card_item.setCardBackgroundColor(note.getColor());
 
-       holder.card_item.setOnClickListener(new View.OnClickListener() {
+       holder.tv_date.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                Intent intent = new Intent(context, UpdateActivity.class);

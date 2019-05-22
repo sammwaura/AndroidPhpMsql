@@ -24,7 +24,6 @@
             android:name=".ui.ui.Insert.InsertActivity"
             android:launchMode="singleTask"
             android:theme="@style/InsertTheme" />
-        <activity android:name=".ui.ui.main.UpdateActivity" />
         <activity android:name=".ui.ui.Update.UpdateActivity"></activity>
     </application>
 

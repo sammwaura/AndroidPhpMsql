@@ -46,13 +46,14 @@ public class InsertActivity extends AppCompatActivity {
     SpectrumPalette palette;
 
     private Context context;
-    private int color, id;
+    private int color;
     private List <Note> notes;
     private SpectrumPalette mSpectrumPalette;
     private int selectedColor;
 
     String title, note;
     Menu actionMenu;
+
 
 
     @Override
@@ -102,7 +103,9 @@ public class InsertActivity extends AppCompatActivity {
                     et_note.setError("Please enter a note");
                 } else {
 
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://my-noter.000webhostapp.com/save.php", new Response.Listener <String>() {
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                            "http://my-noter.000webhostapp.com/save.php",
+                            new Response.Listener <String>() {
                         @Override
                         public void onResponse(String response) {
                             Toast.makeText(getApplicationContext(), "Successfully Saved.", Toast.LENGTH_LONG).show();
@@ -122,7 +125,7 @@ public class InsertActivity extends AppCompatActivity {
                             params.put("title", title);
                             params.put("note", note);
                             params.put("color", String.valueOf(color));
-                            System.out.println("&^&&&&&&&" + title);
+                            System.out.println("%%%%%%%%%%%%%" + title);
                             System.out.println("###############" + note);
                             System.out.println("&&&&&&&&&&&&" + color);
                             return params;

@@ -25,6 +25,11 @@ import com.meshsami27.android_phpmysql.ui.model.Note;
 import com.meshsami27.android_phpmysql.ui.ui.main.MainActivity;
 import com.thebluealliance.spectrum.SpectrumPalette;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +41,12 @@ public class UpdateActivity extends AppCompatActivity {
     SpectrumPalette palette;
 
     private Context context;
-    private int color, id;
-    private List <Note> notes;
+    private int color;
+    private List <Note> noter;
     private SpectrumPalette mSpectrumPalette;
     private int selectedColor;
+    private int note_id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,7 @@ public class UpdateActivity extends AppCompatActivity {
         et_title = findViewById(R.id.title);
         et_note = findViewById(R.id.note);
         palette = findViewById(R.id.palette);
+
 
         mSpectrumPalette = findViewById(R.id.palette);
 
@@ -62,6 +70,8 @@ public class UpdateActivity extends AppCompatActivity {
                 selectedColor = color;
             }
         });
+
+        noter = new ArrayList<>();
     }
 
     @Override
@@ -75,7 +85,8 @@ public class UpdateActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.update:
-
+                //Update
+                final int note_id = item.getItemId();
                 final String title = et_title.getText().toString().trim();
                 final String note = et_note.getText().toString().trim();
                 final int color = selectedColor;
@@ -86,13 +97,16 @@ public class UpdateActivity extends AppCompatActivity {
                     et_note.setError("Please enter a note");
                 } else {
 
-                    final StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://my-noter.000webhostapp.com/update.php", new Response.Listener <String>() {
+                    final StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                            "http://my-noter.000webhostapp.com/update.php",
+                            new Response.Listener <String>() {
                         @Override
                         public void onResponse(String response) {
-                            Toast.makeText(getApplicationContext(), "Successfully Updated!", Toast.LENGTH_LONG).show();
 
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
+
+
                         }
                     }, new Response.ErrorListener() {
                         @Override
@@ -102,10 +116,12 @@ public class UpdateActivity extends AppCompatActivity {
                         @Override
                         protected Map <String, String> getParams() {
                             Map <String, String> params = new HashMap <>();
+                            params.put("note_id", String.valueOf(note_id));
                             params.put("title", title);
                             params.put("note", note);
                             params.put("color", String.valueOf(color));
-                            System.out.println("&^&&&&&&&" + title);
+                            System.out.println("%%%%%" + note_id);
+                            System.out.println("@@@@@@@@@" + title);
                             System.out.println("###############" + note);
                             System.out.println("&&&&&&&&&&&&" + color);
                             return params;
@@ -137,7 +153,7 @@ public class UpdateActivity extends AppCompatActivity {
                     @Override
                     protected Map <String, String> getParams() {
                         Map <String, String> params = new HashMap <>();
-                        params.put("id", String.valueOf(id));
+//                        params.put("note_id", String.valueOf(note_id));
                         return params;
                     }
                 };
