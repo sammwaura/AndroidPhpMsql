@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-//        retrieveData();
+        retrieveData();
 //        retrieveUpdatedData();
 
         floatingActionButton = findViewById(R.id.add);
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
         System.out.println("!!!!!!!!updating!!!!!!!");
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                "http://my-noter.000webhostapp.com/update.php",
+                "http://my-noter.000webhostapp.com/selectAll.php",
                new Response.Listener <String>() {
 
                     @Override
@@ -157,28 +157,24 @@ public class MainActivity extends AppCompatActivity {
 
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            String success = jsonObject.getString("success");
                             JSONArray array = jsonObject.getJSONArray("notes");
 
-                                if (success.equals("1")){
 
                             for (int i = 0; i < array.length(); i++) {
 
-                                JSONObject row = array.getJSONObject(i);
+                                JSONObject object = array.getJSONObject(i);
 
                                 Note note = new Note(
-                                        row.getInt("note_id"),
-                                        row.getString("title"),
-                                        row.getString("note"),
-                                        row.getInt("color")
+                                        object.getInt("note_id"),
+                                        object.getString("title"),
+                                        object.getString("note"),
+                                        object.getInt("color")
                                 );
                                 noter.add(note);
                             }
-                                }
 
-                            adapter = new MainAdapter(getApplicationContext(), noter);
+
                             adapter.notifyDataSetChanged();
-                            recyclerView.setAdapter(adapter);
 
 
                         } catch (JSONException e) {
@@ -204,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         // put your code here...
-        retrieveData();
+//        retrieveData();
 //        retrieveUpdatedData();
     }
 
