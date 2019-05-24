@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,12 +43,12 @@ public class UpdateActivity extends AppCompatActivity {
 
     private Context context;
 //    private int color;
-    private List <Note> noter;
+    private ArrayList <Note> noter;
     private SpectrumPalette mSpectrumPalette;
     private int selectedColor;
     private int note_id;
-    private Intent title;
-    private Intent note;
+    private String title;
+    private String note;
     private int color;
 
 
@@ -55,15 +56,18 @@ public class UpdateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
+        Bundle extras = getIntent().getExtras();
 
         et_title = findViewById(R.id.title);
         et_note = findViewById(R.id.note);
 
 
-        note_id = getIntent().getIntExtra("note_id", 0);
-        title = getIntent().putExtra("title", title);
-        note = getIntent().putExtra("note", note);
-        color = getIntent().getIntExtra("color", 0);
+        //getting values inputed
+        note_id = extras.getInt("note_id");
+        System.out.println(note_id);
+        title = extras.getString("title");
+        note = extras.getString("note");
+        color = extras.getInt("color", 0);
 
 
         mSpectrumPalette = findViewById(R.id.palette);
@@ -80,6 +84,8 @@ public class UpdateActivity extends AppCompatActivity {
         });
 
         noter = new ArrayList<>();
+
+
     }
 
     @Override
@@ -94,7 +100,7 @@ public class UpdateActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.update:
                 //Update
-                final int id = this.note_id();
+
                 final String title = et_title.getText().toString().trim();
                 final String note = et_note.getText().toString().trim();
                 final int color = selectedColor;
@@ -113,6 +119,7 @@ public class UpdateActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
+                            Log.d("Response", response);
 
 
                         }
@@ -124,12 +131,14 @@ public class UpdateActivity extends AppCompatActivity {
                         @Override
                         protected Map <String, String> getParams() {
                             Map <String, String> params = new HashMap <>();
-                            params.put("note_id", String.valueOf(id));
+                            params.put("note_id", String.valueOf(note_id));
                             params.put("title", title);
                             params.put("note", note);
                             params.put("color", String.valueOf(color));
                             return params;
                         }
+
+
                     };
                     final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                     requestQueue.add(stringRequest);
@@ -189,9 +198,7 @@ public class UpdateActivity extends AppCompatActivity {
         }
     }
 
-    private int note_id() {
-        return note_id;
-    }
+
 }
 
 

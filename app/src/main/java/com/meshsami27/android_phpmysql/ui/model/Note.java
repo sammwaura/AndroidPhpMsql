@@ -47,3 +47,4 @@ public class Note {
         this.color = color;
     }
 }
+

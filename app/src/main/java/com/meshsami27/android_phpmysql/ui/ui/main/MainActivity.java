@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 
 import android.widget.Toast;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MainAdapter(MainActivity.this, noter);
         recyclerView.setAdapter(adapter);
+
+
 
 
         retrieveData();
@@ -200,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         // put your code here...
+        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
 //        retrieveData();
 //        retrieveUpdatedData();
     }
