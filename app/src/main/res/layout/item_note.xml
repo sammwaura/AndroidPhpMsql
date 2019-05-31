@@ -18,11 +18,21 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:id="@+id/mainCard"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:background="@color/white"
         android:padding="10dp">
+
+        <!--<ImageView-->
+            <!--android:id="@+id/mDeletebin"-->
+            <!--android:layout_width="47dp"-->
+            <!--android:layout_height="28dp"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginEnd="18dp"-->
+            <!--android:src="@drawable/ic_delete" />-->
 
         <TextView
             android:id="@+id/title"
@@ -30,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="@string/to_do"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/note"

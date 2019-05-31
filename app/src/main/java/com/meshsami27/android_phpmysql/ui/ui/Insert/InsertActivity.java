@@ -61,9 +61,9 @@ public class InsertActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert);
 
+
         et_title = findViewById(R.id.title);
         et_note = findViewById(R.id.note);
-        palette = findViewById(R.id.palette);
 
         mSpectrumPalette = findViewById(R.id.palette);
 
@@ -77,7 +77,6 @@ public class InsertActivity extends AppCompatActivity {
                 selectedColor = color;
             }
         });
-
     }
 
     @Override

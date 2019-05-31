@@ -64,9 +64,11 @@ public class UpdateActivity extends AppCompatActivity {
 
         //getting values inputed
         note_id = extras.getInt("note_id");
-        System.out.println(note_id);
         title = extras.getString("title");
+        et_title.setText(title);
+        System.out.println("titletitletitle"+title);
         note = extras.getString("note");
+        et_note.setText(note);
         color = extras.getInt("color", 0);
 
 
@@ -100,7 +102,6 @@ public class UpdateActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.update:
                 //Update
-
                 final String title = et_title.getText().toString().trim();
                 final String note = et_note.getText().toString().trim();
                 final int color = selectedColor;
@@ -145,60 +146,47 @@ public class UpdateActivity extends AppCompatActivity {
                 }
                 return true;
 
-            //Delete
             case R.id.delete:
+                //Delete
 
-                final StringRequest stringRequest2 = new StringRequest(Request.Method.POST, "http://my-noter.000webhostapp.com/delete.php", new Response.Listener <String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(getApplicationContext(), "Successfully Deleted!", Toast.LENGTH_LONG).show();
+                //System.out.println("Deleting "+note_id);
 
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
+                    final StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                            "http://my-noter.000webhostapp.com/delete.php",
+                            new Response.Listener <String>() {
+                                @Override
+                                public void onResponse(String response) {
 
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                                    System.out.println("REponse"+response);
 
-                    }
-                }) {
-                    @Override
-                    protected Map <String, String> getParams() {
-                        Map <String, String> params = new HashMap <>();
-//                        params.put("note_id", String.valueOf(note_id));
-                        return params;
-                    }
-                };
-                final RequestQueue requestQueue2 = Volley.newRequestQueue(getApplicationContext());
-                requestQueue2.add(stringRequest2);
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                    Log.d("Response", response);
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                        }
+                    }) {
+                        @Override
+                        protected Map <String, String> getParams() {
+                            Map <String, String> params = new HashMap <>();
 
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                alertDialog.setTitle("Confirm !");
-                alertDialog.setMessage("Are you sure?" );
-                alertDialog.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        requestQueue2.stop();
-                    }
-                });
-                alertDialog.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                alertDialog.show();
+                            System.out.println("note_idnote_id"+note_id);
+
+                            params.put("note_id", String.valueOf(note_id));
+                            return params;
+                        }
 
 
+                    };
+                    final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                    requestQueue.add(stringRequest);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 }
 
 

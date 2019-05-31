@@ -1,6 +1,8 @@
 package com.meshsami27.android_phpmysql.ui.ui.main;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
@@ -10,24 +12,34 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.meshsami27.android_phpmysql.R;
 import com.meshsami27.android_phpmysql.ui.model.Note;
 import com.meshsami27.android_phpmysql.ui.ui.Update.UpdateActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHolder>{
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHolder> {
 
     private Context context;
-    private ArrayList<Note> noter;
+    private ArrayList <Note> noter;
     private ItemClickListener itemClickListener;
-    private int INTENT_EDIT = 200;
+    private int note_id;
 
-    public void swapItems( ArrayList<Note> noter) {
+    public void swapItems(ArrayList <Note> noter) {
         // compute diffs
         final NoteDiffCallback diffCallback = new NoteDiffCallback(this.noter, noter);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
@@ -40,17 +52,19 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
     }
 
 
-    class CustomViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener {
-         public TextView tv_title, tv_note, tv_date;
-         public CardView card_item;
-         public ItemClickListener itemClickListener;
+    class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public TextView tv_title, tv_note, tv_date;
+        public CardView card_item;
+        public RelativeLayout mainCard;
+        public ItemClickListener itemClickListener;
 
         CustomViewHolder(View view, ItemClickListener itemClickListener) {
             super(view);
 
-            tv_title =view.findViewById(R.id.title);
+            tv_title = view.findViewById(R.id.title);
+            mainCard = view.findViewById(R.id.mainCard);
             tv_note = view.findViewById(R.id.note);
-            tv_date =  view.findViewById(R.id.date);
+            tv_date = view.findViewById(R.id.date);
             card_item = view.findViewById(R.id.card_item);
             this.itemClickListener = itemClickListener;
         }
@@ -61,20 +75,21 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         }
     }
 
-    public MainAdapter(Context context, ArrayList<Note> noter) {
+    public MainAdapter(Context context, ArrayList <Note> noter) {
         this.context = context;
         this.noter = noter;
-        }
+    }
 
     public class NoteDiffCallback extends DiffUtil.Callback {
 
-        private ArrayList<Note> mOldList;
-        private ArrayList<Note> mNewList;
+        private ArrayList <Note> mOldList;
+        private ArrayList <Note> mNewList;
 
-        public NoteDiffCallback(ArrayList<Note> oldList, ArrayList<Note> newList) {
+        public NoteDiffCallback(ArrayList <Note> oldList, ArrayList <Note> newList) {
             this.mOldList = oldList;
             this.mNewList = newList;
         }
+
         @Override
         public int getOldListSize() {
             return mOldList.size();
@@ -99,7 +114,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             if
                     (oldNote.getTitle() == newNote.getTitle() &&
                     oldNote.getNote() == newNote.getNote() &&
-                    oldNote.getColor() == newNote.getColor()){
+                    oldNote.getColor() == newNote.getColor()) {
                 return true;
             }
             return false;
@@ -118,26 +133,24 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
     @Override
     public void onBindViewHolder(@NonNull final CustomViewHolder holder, final int position) {
         final Note note = noter.get(position);
-        holder.tv_title.setText( noter.get(position).getTitle());
-      //  holder.tv_title.setText(note.getTitle());
+        holder.tv_title.setText(noter.get(position).getTitle());
+        //  holder.tv_title.setText(note.getTitle());
         holder.tv_note.setText(note.getNote());
         //holder.tv_date.setText(note.getDate());
 
-       holder.card_item.setCardBackgroundColor(note.getColor());
+        holder.card_item.setCardBackgroundColor(note.getColor());
 
-       holder.tv_date.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               Intent intent = new Intent(context, UpdateActivity.class);
-               intent.putExtra("note_id", noter.get(position).getId());
-               intent.putExtra("title", noter.get(position).getTitle());
-               intent.putExtra("note", noter.get(position).getNote());
-               intent.putExtra("color", noter.get(position).getColor());
+        holder.mainCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, UpdateActivity.class);
+                intent.putExtra("note_id", noter.get(position).getId());
+                intent.putExtra("title", noter.get(position).getTitle());
+                intent.putExtra("note", noter.get(position).getNote());
+                intent.putExtra("color", noter.get(position).getColor());
                 context.startActivity(intent);
-           }
-       });
-
-
+            }
+        });
     }
 
     @Override
@@ -146,11 +159,17 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
     }
 
 
-    public interface ItemClickListener{
+    public interface ItemClickListener {
         void onItemOnClick(View view, int position);
 
         View.OnClickListener onItemOnClick();
     }
-
-
 }
+
+
+
+
+
+
+
+
