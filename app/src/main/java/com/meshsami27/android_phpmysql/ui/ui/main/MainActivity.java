@@ -181,64 +181,6 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void deleteNote(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                .setTitle("Deleting!")
-                .setMessage("are you sure")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        StringRequest stringRequest = new StringRequest(Request.Method.DELETE,
-                                "http://my-noter.000webhostapp.com/notes.php",
-                                new Response.Listener <String>() {
-
-                                    @Override
-                                    public void onResponse(String response) {
-
-
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(response);
-                                            JSONArray array = jsonObject.getJSONArray("notes");
-
-
-                                            for (int i = 0; i < array.length(); i++) {
-
-                                                JSONObject object = array.getJSONObject(i);
-
-                                                Note note = new Note(
-                                                        object.getInt("note_id"),
-                                                        object.getString("title"),
-                                                        object.getString("note"),
-                                                        object.getInt("color")
-                                                );
-                                                noter.clear();
-                                            }
-
-
-                                            adapter.notifyDataSetChanged();
-
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                },
-                                new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        System.out.println("volleyError error" + error.getMessage());
-                                        Toast.makeText(getApplicationContext(), "Poor network connection.", Toast.LENGTH_LONG).show();
-                                    }
-                                });
-
-                        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-                        requestQueue.add(stringRequest);
-                    }
-                });
-
-    }
-
     @Override
     public void onResume() {
         super.onResume();
